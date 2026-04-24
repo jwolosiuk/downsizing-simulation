@@ -96,6 +96,7 @@ A non-trivial hypothesis worth testing:
 - Smalls running "micro-agriculture" (small `a_S^F > 0` from a different technology).
 - Spatial constraints / land as a factor of production.
 - Heterogeneous talent in intellectual work.
+- **Security as a good.** Smalls are physically defenseless, so the state of smalls hires giants as guards / army / police. Security is a per-person service (one giant protects many smalls), paid for by taxes on intellectual output. This adds a second channel – beyond food – through which giants capture rent, and makes the `G`/`S` ratio depend on the required security level, not just on caloric demand.
 
 ## Status
 
