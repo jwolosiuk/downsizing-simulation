@@ -109,6 +109,17 @@ Minimal outputs of the simulation:
 A non-trivial hypothesis worth testing:
 *There exists a level of `s` at which giants, despite being a minority, capture the majority of income – because their labor is the only source of a good nobody else can produce.*
 
+## Results from the base solver
+
+`equilibrium.py` implements the closed form. `sweep.py` runs it across shrink factors and scaling variants (`φ = 1/s, 1/s², 1/s³`). Key findings:
+
+- **Population split falls sharply with `s`.** At `s = 10` with linear scaling (`φ = 0.1`), giants are ~1.1% of the population. With volumetric scaling (`φ = 0.001`), about 0.011%.
+- **No rent for giants.** Giants' income share is ~proportional to their population share (1.21% vs 1.10% at `s = 10` linear). The wage premium `w_G / w_S` asymptotes at ~10% under defaults and does not blow up. Under perfect competition with linear technology, free entry bids away the scarcity rent – the giants' premium covers exactly their higher consumption, nothing more.
+- **Cost-of-living floor confirmed.** `E_S / E_G ≈ 0.91` at `s = 10` and barely falls further with more shrinking. It never approaches `φ`. The intellectual-goods floor dominates for any `s > ~3`.
+- **Resource footprint collapses.** Total food consumed drops roughly as `φ`, because the number of giants needed to feed everyone is tied to food-demand, which scales with `φ`.
+
+The main hypothesis from the previous section is therefore **refuted in the base model**. Rent for giants requires something beyond the linear Ricardian setup – a constrained factor (land), a monopoly, or a non-market payment (security taxation). Those are exactly the extensions listed below.
+
 ## Extensions (after the base case)
 
 - Cost and irreversibility of conversion.
@@ -118,6 +129,15 @@ A non-trivial hypothesis worth testing:
 - Heterogeneous talent in intellectual work.
 - **Security as a good.** Smalls are physically defenseless, so the state of smalls hires giants as guards / army / police. Security is a per-person service (one giant protects many smalls), paid for by taxes on intellectual output. This adds a second channel – beyond food – through which giants capture rent, and makes the `G`/`S` ratio depend on the required security level, not just on caloric demand.
 
+## Running it
+
+```
+pip install -r requirements.txt
+python3 equilibrium.py       # print a single equilibrium
+python3 test_equilibrium.py  # sanity tests
+python3 sweep.py             # sweep over s, write figures/sweep_base.png
+```
+
 ## Status
 
-The repository is at the model-design stage. Next step: implement an equilibrium solver for this minimal setup (2 goods, 2 types, 4 prices/wages) and sweep over `s` and `φ`.
+Base solver done (closed form, two-good Ricardian corner, all tests pass). Next step: a `brentq`-based solver for the first extension that breaks the Ricardian pin – most likely diminishing returns in farming (`a_G^F · L_F^γ` with `γ < 1`), or land as a fixed factor, or security as a taxed per-person service. Each of these should re-create a genuine interior equilibrium with a non-trivial rent for giants.
