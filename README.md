@@ -111,14 +111,28 @@ A non-trivial hypothesis worth testing:
 
 ## Results from the base solver
 
-`equilibrium.py` implements the closed form. `sweep.py` runs it across shrink factors and scaling variants (`φ = 1/s, 1/s², 1/s³`). Key findings:
+`equilibrium.py` implements the closed form. `sweep.py` runs it across shrink factors and scaling variants (`φ = 1/s, 1/s², 1/s³`). `calibration.py` maps parameters to dollar-denominated scenarios. Key findings:
 
-- **Population split falls sharply with `s`.** At `s = 10` with linear scaling (`φ = 0.1`), giants are ~1.1% of the population. With volumetric scaling (`φ = 0.001`), about 0.011%.
-- **No rent for giants.** Giants' income share is ~proportional to their population share (1.21% vs 1.10% at `s = 10` linear). The wage premium `w_G / w_S` asymptotes at ~10% under defaults and does not blow up. Under perfect competition with linear technology, free entry bids away the scarcity rent – the giants' premium covers exactly their higher consumption, nothing more.
-- **Cost-of-living floor confirmed.** `E_S / E_G ≈ 0.91` at `s = 10` and barely falls further with more shrinking. It never approaches `φ`. The intellectual-goods floor dominates for any `s > ~3`.
-- **Resource footprint collapses.** Total food consumed drops roughly as `φ`, because the number of giants needed to feed everyone is tied to food-demand, which scales with `φ`.
+- **Population split falls sharply with `s`.** Giants only need to be plentiful enough to feed everyone. As `φ` falls, food demand falls with it, so the giant headcount tracks `φ`.
+- **The "rent ratio" is `a_GF / (a_GF − 1 + φ)`.** Equivalently: giants' share of income / giants' share of population. This is the same expression as the wage premium `w_G / w_S`. It depends almost entirely on `a_GF` – how productive giants are at producing body-scaling goods. Think of `1/a_GF` as the share of budget that goes on goods that scale with body size.
+- **Small-budget share `E_S / E_G ≈ 1 − (1 − φ)/a_GF`.** Shrinking saves money *only to the extent* that body-scaling goods were a large part of the budget in the first place. In a tech-utopia where food + housing + transport are 10% of spending, shrinking 10× saves ~9% of the budget, not 90%. In a subsistence economy where they are 80%, shrinking 10× saves ~72%.
 
-The main hypothesis from the previous section is therefore **refuted in the base model**. Rent for giants requires something beyond the linear Ricardian setup – a constrained factor (land), a monopoly, or a non-market payment (security taxation). Those are exactly the extensions listed below.
+### Calibrated scenarios (population 1 million, giant wage anchored to $50 000/yr)
+
+| Scenario | `a_GF` | body-scaling share | `φ` | giants | wage premium | small saves | giants' income share | rent ratio |
+|---|---|---|---|---|---|---|---|---|
+| Tech utopia  | 10   | 10% | 0.1 | 11 000 (1.1%) | 1.10× | 9% | 1.2% | 1.10× |
+| US-like      | 2    | 50% | 0.1 | 91 000 (9.1%) | 1.82× | 45% | 15.4% | 1.69× |
+| Subsistence  | 1.25 | 80% | 0.1 | 286 000 (28.6%) | 3.57× | 72% | **58.8%** | 2.06× |
+| Subsistence  | 1.25 | 80% | 0.01 | 38 500 (3.8%) | 4.81× | 79% | 19% | **4.19×** |
+
+Take-aways:
+
+- **The interesting hypothesis ("giants capture most of the income") is true in the subsistence regime, false in tech utopia.** A pre-industrial-style world with shrinking concentrates income in the hands of the few who can still operate heavy agriculture.
+- **Shrinking is worth it exactly when body-scaling goods dominate the budget.** A society that has already automated food and housing gains little from downsizing its people – the remaining budget is per-person (healthcare, education, software) and does not shrink.
+- **Rent-ratio and savings-ratio move together.** `E_S / E_G = 1 − (w_G/w_S − 1)·... ` – the same parameter (`a_GF`) governs both how much smalls save and how much giants capture.
+
+Under perfect competition with linear tech, free entry caps the rent at `a_GF/(a_GF − 1 + φ)`. A rent above that would require something beyond the linear Ricardian setup – a constrained factor (land), diminishing returns, or a non-market payment (security taxation). Those are exactly the extensions listed below.
 
 ## Extensions (after the base case)
 
@@ -136,6 +150,7 @@ pip install -r requirements.txt
 python3 equilibrium.py       # print a single equilibrium
 python3 test_equilibrium.py  # sanity tests
 python3 sweep.py             # sweep over s, write figures/sweep_base.png
+python3 calibration.py       # dollar-denominated scenarios
 ```
 
 ## Status
