@@ -52,11 +52,12 @@ The base version uses a single **physical-needs coefficient `φ = 1/s`**. This i
 
 ### Goods
 
-At least three, so the dynamics is non-trivial:
+Two are enough for the dynamics to be non-trivial:
 
 - **`F` – food / raw materials.** Produced *only* by `G`. Consumption: `1` by `G`, `φ` by `S`.
 - **`I` – intellectual goods.** Produced by both types. Consumption: `1` per person (does not scale).
-- **`H` – fixed per-person services** (optional, easy to add later) – per-person, produced by both.
+
+An optional third good – **`H`, fixed per-person services** – can be added later but does not introduce a new mechanism, since `I` already carries the per-person property.
 
 ### Productivity (units per person per period)
 
@@ -64,9 +65,12 @@ At least three, so the dynamics is non-trivial:
 - `a_G^I`, `a_S^I` – intellectual output. A small may be *more* efficient per resource (since they consume less themselves), but per head start with `a_G^I = a_S^I`.
 - `a_S^F = 0` – smalls do not produce food at scale.
 
-### Prices and wages
+### Parameters vs. unknowns
 
-Endogenous: `p_F`, `p_I`, wages `w_G`, `w_S`.
+- **Exogenous** (inputs we set): population `N`, shrink factor `s`, needs coefficient `φ`, productivities `a_G^F`, `a_G^I`, `a_S^I`.
+- **Endogenous** (solved by the model): prices `p_F`, `p_I`, wages `w_G`, `w_S`, and the population split `n_S / n_G`.
+
+This split matters: the interesting claim ("do giants capture most of the income?") is only meaningful if wages are endogenous. If we hard-coded `w_G`, the answer would just be whatever number we wrote down – the model would explain nothing.
 
 Simplification: each agent works on one good at a time and picks whatever yields the higher income. Wage equals marginal value of output.
 
@@ -76,6 +80,22 @@ Simplification: each agent works on one good at a time and picks whatever yields
 2. **Intellectual-goods clearing:** `n_G · a_G^I · x_G + n_S · a_S^I · x_S = N` (`x` is the labor share on `I`).
 3. **Agent budget:** income ≥ cost of living for the chosen type.
 4. **No-arbitrage:** welfare (surplus after cost of living) of a giant equals that of a small. This condition pins down `n_S / n_G`.
+
+## Why this is the minimum
+
+The test applied to every component: **does removing it collapse the question?** If the question still has a meaningful answer without the piece, the piece is not minimal. If removing it trivializes the answer (obvious "yes, costs scale 1:1") or destroys the equilibrium, it has to stay.
+
+What earns its spot:
+
+- **Two agent types.** One type → no specialization, no ratio question. A size continuum still bifurcates around the largest size that can farm, so it collapses back to two types.
+- **Two goods `F` and `I` with different scaling.** One good collapses the cost-of-living question to a trivial answer. The uneven scaling (`F` with body size, `I` per-person) *is* the mechanism being studied.
+- **`a_S^F = 0` as a hard constraint.** Not a small disadvantage – a physical impossibility. Any positive `a_S^F` dissolves the bottleneck into a smooth tradeoff and kills the scarcity-rent story.
+- **Free reversible conversion + no-arbitrage.** Without this the ratio `n_S / n_G` is an initial condition, not a result. The welfare-equality condition is what pins it endogenously.
+- **Endogenous prices and wages.** Fixed prices would make the income-capture question unanswerable.
+
+What is deliberately left out (each orthogonal to the four mechanisms above): time/capital/dynamics, heterogeneous talent, demographics, space and land, market power, multiple food goods, separate `φ` per good, and `H` as a third good (since `I` already carries the per-person property).
+
+The invariant: every included element maps to one of four things – (1) asymmetric production, (2) asymmetric consumption, (3) market clearing, (4) endogenous ratio. Drop any one and the question has no answer or a trivial one.
 
 ## What we want to see
 
@@ -100,4 +120,4 @@ A non-trivial hypothesis worth testing:
 
 ## Status
 
-The repository is at the model-design stage. Next step: implement an equilibrium solver for this minimal setup (3 goods, 2 types, 4 prices/wages) and sweep over `s` and `φ`.
+The repository is at the model-design stage. Next step: implement an equilibrium solver for this minimal setup (2 goods, 2 types, 4 prices/wages) and sweep over `s` and `φ`.
